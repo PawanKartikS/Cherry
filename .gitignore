@@ -1,0 +1,14 @@
+main
+a.out
+*.chr
+cherry
+
+Makefile
+CMakeFiles/*
+CMakeCache.txt
+cmake_install.cmake
+
+.idea/
+.vscode/
+Cherry.cbp
+
