@@ -174,11 +174,18 @@ token_t *resolve_var(const symtbl_t *symtbl, const char *sym) {
 }
 
 int compare(const token_t *lhs, const token_t *rhs, const char *op) {
-  if (lhs->type != rhs->type) {
+  if (lhs->type != rhs->type && (lhs->type != none && rhs->type != none)) {
     fprintf(stderr,
             "eval.c: cannot compare for diff vals of [l/r]types in l[%d]\n",
             lno);
     return -1;
+  }
+
+  int null_check = (lhs->type == none || rhs->type == none);
+  int buf_null = (!lhs->tk || !rhs->tk);
+
+  if (buf_null && buf_null) {
+    return 1;
   }
 
   if (lhs->type == numeric) {

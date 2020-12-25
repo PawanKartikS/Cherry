@@ -136,6 +136,7 @@ int register_sym(symtbl_t *symtbl, const char *sym, const void *val,
   }
 
   switch (vtype) {
+    case none:
     case string:
     case identifier:
     case numeric:

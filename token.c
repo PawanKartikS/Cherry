@@ -39,7 +39,7 @@ int is_reserved(const char *kwd) {
                                    "defer", "var", "print", "read", "return",
                                    /* Built-in - from builtin.c */
                                    "cmp", "len", "idx", "put", "rev", "exit",
-                                   "gc"};
+                                   "gc", "none"};
 
   const unsigned int len = sizeof(reserved) / sizeof(reserved[0]);
   for (unsigned int i = 0; i < len; i++) {

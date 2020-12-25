@@ -94,6 +94,11 @@ int parse_next(list_t *tokens, void **buf, unsigned int *type) {
   if (size - tokens->size == 1) {
     *buf = ft->tk;
     *type = ft->type;
+
+    if (match_token(ft, "none")) {
+      *buf = NULL;
+      *type = none;
+    }
   }
 
   return ret;

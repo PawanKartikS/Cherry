@@ -2,8 +2,21 @@
 #include "node.h"
 
 enum {
-  bitwise, br, operator, pr, sqbr, syntax, string, numeric, identifier, fretval,
-  glist, gstack, unknown };
+  bitwise,
+  br,
+  operator,
+  pr,
+  sqbr,
+  syntax,
+  string,
+  numeric,
+  identifier,
+  fretval,
+  glist,
+  gstack,
+  none,
+  unknown
+};
 
 typedef struct token {
   void *tk;
