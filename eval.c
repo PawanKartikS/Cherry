@@ -184,7 +184,7 @@ int compare(const token_t *lhs, const token_t *rhs, const char *op) {
   int null_check = (lhs->type == none || rhs->type == none);
   int buf_null = (!lhs->tk || !rhs->tk);
 
-  if (buf_null && buf_null) {
+  if (null_check && buf_null) {
     return 1;
   }
 
