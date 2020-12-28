@@ -164,7 +164,9 @@ int parse_decl(const char *kwd, void **buf, list_t *tokens) {
    * val -> [idf/str/numeric/function result]
    */
 
-  pop_front(tokens);
+  token_t *peek = peek_front(tokens);
+  if (match_token(peek, "var")) pop_front(tokens);
+
   const int is_const = strcmp(kwd, "const") == 0;
   if (is_const) pop_front(tokens);
 
@@ -447,6 +449,7 @@ int parse(void **buf, list_t *tokens) {
   token_t *tk = lookahead(tokens);
   if (!tk) goto pfail;
 
+  if (!strcmp(tk->tk, "=")) return parse_decl(kwd, buf, tokens);
   if (!strcmp(tk->tk, "(")) return parse_func(buf, tokens);
   if (!strcmp(tk->tk, "--")) return parse_unary(buf, tokens, post_dec);
   if (!strcmp(tk->tk, "++")) return parse_unary(buf, tokens, post_inc);
