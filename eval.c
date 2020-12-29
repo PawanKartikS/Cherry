@@ -258,8 +258,6 @@ int eval_func(eval_t *eval, const char *func, const func_node_t *fnode) {
     _Exit(1);
   }
 
-  if (!sig && fnode) return eval_builtin(fnode, eval->tbl);
-
   if (!strcmp(func, "main")) {
     assert(init_frame(eval->tbl));
     goto skipargs_init;
