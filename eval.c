@@ -249,7 +249,16 @@ int eval_func(eval_t *eval, const char *func, const func_node_t *fnode) {
   if (!eval) return 0;
 
   fsig_t *sig = get_fsig(eval->tbl, func);
-  if (!sig) return eval_builtin(fnode, eval->tbl);
+  if (!sig) {
+    if (fnode) return eval_builtin(fnode, eval->tbl);
+
+    /* At this point, sig is NULL and the func is not a builtin. */
+    fprintf(stderr, "eval.c: could not call %s()\n", func);
+    cleanup();
+    _Exit(1);
+  }
+
+  if (!sig && fnode) return eval_builtin(fnode, eval->tbl);
 
   if (!strcmp(func, "main")) {
     assert(init_frame(eval->tbl));
