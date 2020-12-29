@@ -89,7 +89,7 @@ int __len(const token_t **args, symtbl_t *symtbl, const unsigned int arglen) {
 
 int __idx(const token_t **args, symtbl_t *symtbl, const unsigned int arglen) {
   char *ptr = strstr((char *)args[0]->tk, (char *)args[1]->tk);
-  double idx = !ptr ? -1 : (char *)ptr - (char *)args[1]->tk;
+  double idx = !ptr ? -1 : (char *)ptr - (char *)args[0]->tk;
   return ret_res(symtbl, &idx, numeric);
 }
 
