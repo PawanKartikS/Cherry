@@ -12,27 +12,41 @@
 #include "token.h"
 #include "util.h"
 
+#define AUTHOR "Pawan Kartik"
+
+FILE *fd = NULL;
+int is_repl = 0;
+
+int get_srcline(char *buf, unsigned long buflen) {
+  if (is_repl) {
+    printf(">>> ");
+    return fgets(buf, buflen, stdin) != NULL;
+  }
+
+  return fgets(buf, buflen, fd) != NULL;
+}
+
 int main(int argc, char **argv) {
-  if (argc != 2) {
-    fprintf(stderr, "usage: ./cherry <sourcefile>\n");
-    return 1;
+  is_repl = argc == 1;
+
+  if (!is_repl) {
+    fd = fopen(argv[1], "r");
+    if (!fd) {
+      fprintf(stderr, "main.c: could not open [%s]\n", argv[1]);
+      return 1;
+    }
+  } else {
+    puts("Cherry REPL");
+    printf("Author: %s\n\n", AUTHOR);
   }
 
-  /* Set to 1 if there's an error */
-  int ret = 0;
   char buf[512];
-
-  FILE *fd = fopen(argv[1], "r");
-  if (!fd) {
-    fprintf(stderr, "main.c: could not open [%s]\n", argv[1]);
-    return 1;
-  }
+  int ret = 0, lno = 0, blanks = 0;
 
   ast_t *ast = init_ast();
   eval_t *eval = init_eval();
 
-  int lno = 0;
-  while (fgets(buf, sizeof buf, fd)) {
+  while (get_srcline(buf, sizeof buf)) {
     lno++;
     list_t *tokens = lex(buf);
 
@@ -47,8 +61,18 @@ int main(int argc, char **argv) {
       ret = 1;
       goto cleanup;
     }
-    
-    if (tokens->size == 0) continue;
+
+    if (tokens->size == 0) {
+      if (is_repl) {
+        if (blanks >= 1) {
+          break;
+        } else {
+          blanks++;
+        }
+      }
+
+      continue;
+    }
 
     const char *kwd = ((token_t *)(tokens->head->data))->tk;
     ast_node_t *node = init_node(tokens);
@@ -63,6 +87,7 @@ int main(int argc, char **argv) {
       goto cleanup;
     }
 
+    blanks = 0;
     node->lno = lno;
 
     /**
@@ -87,7 +112,7 @@ int main(int argc, char **argv) {
 
   /* exec */
   if (!eval_prog(ast, eval)) ret = 1;
-  fclose(fd);
+  if (fd) fclose(fd);
 
 /* Clean up all the heap allocs and return the error code set by the program. */
 cleanup:
