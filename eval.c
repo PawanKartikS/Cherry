@@ -181,12 +181,8 @@ int compare(const token_t *lhs, const token_t *rhs, const char *op) {
     return -1;
   }
 
-  int null_check = (lhs->type == none || rhs->type == none);
-  int buf_null = (!lhs->tk || !rhs->tk);
-
-  if (null_check && buf_null) {
-    return 1;
-  }
+  if (lhs->type == none) return rhs->tk == NULL;
+  if (rhs->type == none) return lhs->tk == NULL;
 
   if (lhs->type == numeric) {
     double a = *(double *)lhs->tk;
